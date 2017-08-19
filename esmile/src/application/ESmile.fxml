@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ESmileController">
+   <center>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane layoutX="100.0" layoutY="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <top>
+                  <MenuBar style="-fx-use-system-menu-bar: true;" BorderPane.alignment="CENTER">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="ファイル">
+                        <items>
+                              <MenuItem mnemonicParsing="false" onAction="#showFileChooser" text="開く" />
+                              <MenuItem mnemonicParsing="false" onAction="#unload" text="閉じる" />
+                          <MenuItem mnemonicParsing="false" onAction="#quit" text="終了" />
+                        </items>
+                      </Menu>
+                        <Menu mnemonicParsing="false" text="ヘルプ">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#showHelp" text="ESmile ヘルプ" />
+                          </items>
+                        </Menu>
+                    </menus>
+                  </MenuBar>
+               </top>
+               <center>
+                  <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                    <tabs>
+                      <Tab text="IPデータ">
+                        <content>
+                          <AnchorPane>
+                                 <children>
+                                    <BorderPane>
+                                       <center>
+                                          <VBox fx:id="imagebox" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Label fx:id="label_fileName" prefHeight="20.0" />
+                                                <StackPane fx:id="stackPane" onDragDropped="#dragDropped" onDragExited="#dragExisted" onDragOver="#dragOver" style="-fx-border-color: #C6C6C6;">
+                                                   <children>
+                                                      <Label fx:id="label_dragAndDrop" text="ここに.gelファイルをドロップしてください">
+                                                         <font>
+                                                            <Font size="38.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Pane fx:id="drawPane" maxWidth="800.0">
+                                                         <children>
+                                                            <ImageView fx:id="imageView" fitHeight="550.0" fitWidth="800.0" onMouseDragged="#drawLine" onMouseExited="#clearCoordinate" onMouseMoved="#showCoordinate" onMousePressed="#drawLine_start" onMouseReleased="#drawLine_end" pickOnBounds="true" preserveRatio="true" />
+                                                         </children>
+                                                      </Pane>
+                                                   </children>
+                                                </StackPane>
+                                                <Label fx:id="label_coordinate" prefHeight="20.0" />
+                                             </children>
+                                             <BorderPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </BorderPane.margin>
+                                          </VBox>
+                                       </center>
+                                       <right>
+                                          <VBox fx:id="infobox" alignment="TOP_CENTER" prefWidth="250.0" spacing="20.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <BorderPane fx:id="pane_ColorAdjust" prefHeight="100.0" prefWidth="200.0">
+                                                   <top>
+                                                      <Label text="明るさ・コントラスト調整" BorderPane.alignment="CENTER" />
+                                                   </top>
+                                                   <center>
+                                                      <GridPane BorderPane.alignment="CENTER">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="10.0" prefWidth="76.0" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="124.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="明るさ">
+                                                               <font>
+                                                                  <Font size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Slider fx:id="slider_brightness" blockIncrement="0.01" max="1.0" min="-1.0" value="0.75" GridPane.columnIndex="1" />
+                                                            <Slider fx:id="slider_contrast" blockIncrement="0.01" max="1.0" min="-1.0" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <Label text="コントラスト" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Slider fx:id="slider_max" blockIncrement="0.005" max="1.0" onMouseReleased="#rescale" value="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label text="最大値" GridPane.rowIndex="3" />
+                                                            <Label text="最小値" GridPane.rowIndex="2" />
+                                                            <Slider fx:id="slider_min" blockIncrement="0.005" max="1.0" onMouseReleased="#rescale" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                         </children>
+                                                         <BorderPane.margin>
+                                                            <Insets top="20.0" />
+                                                         </BorderPane.margin>
+                                                      </GridPane>
+                                                   </center>
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                </BorderPane>
+                                                <BorderPane fx:id="pane_FileInformation" prefHeight="150.0">
+                                                   <top>
+                                                      <Label text="情報" BorderPane.alignment="CENTER" />
+                                                   </top>
+                                                   <center>
+                                                      <GridPane alignment="CENTER" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="87.0" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="85.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="70.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Fading Time">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Latitude" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Voltage" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Resolution" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Date Time" GridPane.rowIndex="4">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label fx:id="label_info_DateTime" alignment="CENTER" contentDisplay="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="min" GridPane.columnIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="V" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="um per pixel" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="text_info_FadingTime" onAction="#info_setFadingTime" GridPane.columnIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_info_Latitude" onAction="#info_setLatitude" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_info_Voltage" onAction="#info_setVoltage" prefHeight="22.0" prefWidth="93.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_info_Resolution" onAction="#info_setResolution" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                         <BorderPane.margin>
+                                                            <Insets top="20.0" />
+                                                         </BorderPane.margin>
+                                                      </GridPane>
+                                                   </center>
+                                                </BorderPane>
+                                                <BorderPane prefHeight="240.0">
+                                                   <top>
+                                                      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <ToggleButton fx:id="toggle_esm1" mnemonicParsing="false" selected="true" text="ESM1">
+                                                               <toggleGroup>
+                                                                  <ToggleGroup fx:id="esmbuttons" />
+                                                               </toggleGroup>
+                                                            </ToggleButton>
+                                                            <ToggleButton fx:id="toggle_esm2" mnemonicParsing="false" text="ESM2" toggleGroup="$esmbuttons" />
+                                                            <ToggleButton fx:id="toggle_esm3" mnemonicParsing="false" text="ESM3" toggleGroup="$esmbuttons" />
+                                                         </children>
+                                                      </HBox>
+                                                   </top>
+                                                   <center>
+                                                      <GridPane alignment="CENTER" hgap="5.0" BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Length">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Height" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="Distance" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="MagnetStrength" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" text="CollimatorDiametor" GridPane.rowIndex="4">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="FilterThickness" GridPane.rowIndex="5">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="SolidAngle" GridPane.rowIndex="6">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="text_esm_Length" onAction="#esm_setLength" GridPane.columnIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_Height" onAction="#esm_setHeight" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_Distance" onAction="#esm_setDistance" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_MagnetStrength" onAction="#esm_setMagnetStrength" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_CollimatorDiametor" onAction="#esm_setCollimatorDiametor" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_FilterThickness" onAction="#esm_setFilterThickness" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_esm_SolidAngle" onAction="#esm_setSolidAngle" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <Label text="m" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="m" GridPane.columnIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="m" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="T" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="m" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="m" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="sr" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="BG Band half width" GridPane.rowIndex="7">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="text_esm_BGBandHalfWidth" onAction="#esm_setBGBandHalfWidth" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <Label text="m" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.0" minWidth="10.0" prefWidth="110.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="139.33331298828125" minWidth="10.0" prefWidth="125.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="139.33331298828125" minWidth="10.0" prefWidth="27.0" />
+                                                         </columnConstraints>
+                                                         <rowConstraints>
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                         <BorderPane.margin>
+                                                            <Insets top="20.0" />
+                                                         </BorderPane.margin>
+                                                      </GridPane>
+                                                   </center>
+                                                </BorderPane>
+                                             </children>
+                                             <padding>
+                                                <Insets top="20.0" />
+                                             </padding>
+                                          </VBox>
+                                       </right>
+                                    </BorderPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab text="エネルギースペクトル">
+                        <content>
+                          <AnchorPane>
+                                 <children>
+                                    <BorderPane prefHeight="662.0" prefWidth="1072.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <right>
+                                          <VBox alignment="TOP_CENTER" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <BorderPane prefHeight="66.0" prefWidth="250.0">
+                                                   <center>
+                                                      <GridPane BorderPane.alignment="CENTER">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.3333740234375" minWidth="10.0" prefWidth="54.6666259765625" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.3333740234375" minWidth="10.0" prefWidth="145.3333740234375" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="最小値">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="最大値" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="text_ymin" onAction="#setAxisRange" GridPane.columnIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_ymax" onAction="#setAxisRange" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                      </GridPane>
+                                                   </center>
+                                                   <top>
+                                                      <Label text="縦軸" BorderPane.alignment="CENTER" />
+                                                   </top>
+                                                </BorderPane>
+                                                <BorderPane layoutX="10.0" layoutY="10.0" prefHeight="66.0" prefWidth="250.0">
+                                                   <center>
+                                                      <GridPane BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <Label text="最小値">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="最大値" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="text_xmin" onAction="#setAxisRange" GridPane.columnIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="text_xmax" onAction="#setAxisRange" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="10.0" prefWidth="53.3333740234375" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.6666259765625" minWidth="10.0" prefWidth="146.6666259765625" />
+                                                         </columnConstraints>
+                                                         <rowConstraints>
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </center>
+                                                   <top>
+                                                      <Label text="横軸" BorderPane.alignment="CENTER" />
+                                                   </top>
+                                                </BorderPane>
+                                                <VBox prefHeight="100.0" prefWidth="100.0" spacing="5.0">
+                                                   <children>
+                                                      <CheckBox fx:id="check_signal" mnemonicParsing="false" onAction="#checkBoxChanged" text="Signal" textFill="RED" wrapText="true">
+                                                         <VBox.margin>
+                                                            <Insets top="20.0" />
+                                                         </VBox.margin>
+                                                      </CheckBox>
+                                                      <CheckBox fx:id="check_background" mnemonicParsing="false" onAction="#checkBoxChanged" text="BG" textFill="BLUE" />
+                                                      <CheckBox fx:id="check_net" mnemonicParsing="false" onAction="#checkBoxChanged" selected="true" text="Signal - BG" />
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </VBox>
+                                                <BorderPane fx:id="borderPane_slopeTemp" prefHeight="230.0" prefWidth="200.0">
+                                                   <top>
+                                                      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <Label text="スロープ温度計算" />
+                                                         </children>
+                                                      </HBox>
+                                                   </top>
+                                                </BorderPane>
+                                                <Button fx:id="button_fileout" mnemonicParsing="false" onAction="#fileout" text="数値データ出力">
+                                                   <VBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                             </children>
+                                             <BorderPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </BorderPane.margin>
+                                          </VBox>
+                                       </right>
+                                       <center>
+                                          <BorderPane fx:id="chartPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                             <top>
+                                                <Label fx:id="label_chart_esm" BorderPane.alignment="CENTER">
+                                                   <BorderPane.margin>
+                                                      <Insets />
+                                                   </BorderPane.margin>
+                                                </Label>
+                                             </top>
+                                             <BorderPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </BorderPane.margin>
+                                          </BorderPane>
+                                       </center>
+                                    </BorderPane>
+                                 </children></AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </TabPane>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
