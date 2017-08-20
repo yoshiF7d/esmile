@@ -2,18 +2,23 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
@@ -95,6 +101,7 @@ public class ESmileController implements Initializable{
 	@FXML private CheckBox check_background;
 	@FXML private BorderPane borderPane_slopeTemp;
 	
+	public HostServices hostServices ;
 	private int WIDTH=800;
 	private int HEIGHT=550;
 	private Data data;
@@ -468,12 +475,21 @@ public class ESmileController implements Initializable{
 	
 	@FXML private void showHelp() {
 		Stage stage = new Stage();
-		Pane pane = new Pane();
+		BorderPane pane = new BorderPane();
+		Hyperlink link = new Hyperlink("ソースコード");
+
+		link.setOnAction(t -> {
+		    hostServices.showDocument("https://gitlab.com/yoshiF7d/esmile");
+		});
+		BorderPane.setAlignment(link,Pos.CENTER);
+		BorderPane.setMargin(link,new Insets(10,10,10,10));
+		pane.setBottom(link);
+
 		ImageView helpview = 
 				new ImageView(new Image(ESmile.class.getClassLoader().getResourceAsStream("esmile_help.png")));
 		helpview.setFitHeight(485);
 		helpview.setFitWidth(755);
-		pane.getChildren().add(helpview);
+		pane.setCenter(helpview);
 		stage.setScene(new Scene(pane));
 		stage.setTitle("Help");
 		stage.initModality(Modality.APPLICATION_MODAL);
