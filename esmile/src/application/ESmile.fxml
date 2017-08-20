@@ -27,7 +27,9 @@
                       </Menu>
                         <Menu mnemonicParsing="false" text="ヘルプ">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#showHelp" text="ESmile ヘルプ" />
+                            <MenuItem mnemonicParsing="false" onAction="#showHelp" text="使い方" />
+                              <MenuItem mnemonicParsing="false" onAction="#showIPInfo" text="IP感度" />
+                              <MenuItem mnemonicParsing="false" onAction="#showFilterInfo" text="フィルター透過率" />
                           </items>
                         </Menu>
                     </menus>

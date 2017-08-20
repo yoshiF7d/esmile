@@ -105,7 +105,7 @@ public class ESmileController implements Initializable{
 	XYSeries background = new XYSeries("bg");
 	private final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 	private final XYSeriesCollection collection = new XYSeriesCollection();
-	private final JFreeChart chart = ChartFactory.createXYLineChart("", "Energy [MeV]", "PSL", 
+	private final JFreeChart chart = ChartFactory.createXYLineChart("", "Energy [MeV]", "", 
 			collection,PlotOrientation.VERTICAL,true,true,false);
 	private final ChartViewer chartViewer = new ChartViewer(chart);
 	private ESM[] esmlist = ESM.list();
@@ -496,5 +496,48 @@ public class ESmileController implements Initializable{
 		}
 	}
 	*/
+	@FXML private void showIPInfo() {
+		Stage stage = new Stage();
+		Pane pane = new Pane();
+		if(data!=null && data.profile != null) {
+			XYSeries series = new XYSeries("IP Sensitivity");
+			for (int i = 0; i < data.profile.length; i++) {
+				series.add(data.profile[i].length, data.profile[i].sensitivity);
+			}
+			JFreeChart chart = ChartFactory.createXYLineChart("","Energy [MeV]","Sensitivity",new XYSeriesCollection(series),PlotOrientation.VERTICAL,false,true,false);		
+			ChartViewer viewer = new ChartViewer(chart);
+			chart.getXYPlot().getRangeAxis(0).setRange(0,0.1);
+			pane.getChildren().add(viewer);
+		}else {
+			Label label = new Label("ラインプロファイルを取得してください");
+			pane.getChildren().add(label);
+		}
+		stage.setScene(new Scene(pane));
+		stage.setTitle("IP sensitivity");
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initOwner(rootPane.getScene().getWindow());
+		stage.showAndWait();
+	}
+	@FXML private void showFilterInfo() {
+		Stage stage = new Stage();
+		Pane pane = new Pane();
+		if(data!=null && data.profile != null) {
+			XYSeries series = new XYSeries("Transmittance");
+			for (int i = 0; i < data.profile.length; i++) {
+				series.add(data.profile[i].length, data.profile[i].transmittance);
+			}
+			JFreeChart chart = ChartFactory.createXYLineChart("","Energy [MeV]","Transmittance",new XYSeriesCollection(series),PlotOrientation.VERTICAL,false,true,false);		
+			ChartViewer viewer = new ChartViewer(chart);
+			pane.getChildren().add(viewer);
+		}else {
+			Label label = new Label("ラインプロファイルを取得してください");
+			pane.getChildren().add(label);
+		}
+		stage.setScene(new Scene(pane));
+		stage.setTitle("Help");
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initOwner(rootPane.getScene().getWindow());
+		stage.showAndWait();
+	}
 	@FXML private void quit() {Platform.exit();}
 }

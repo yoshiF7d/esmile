@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 
@@ -36,7 +35,6 @@ public class Data {
 		double background_psl;
 		double sensitivity;
 		double transmittance;
-		double fading;
 		boolean invalid;
 	}
 	Profile[] profile;
@@ -282,7 +280,6 @@ public class Data {
 			coef /= fading(info.fadingTime);
 			profile[i].transmittance = transmittance(energy,theta,esm.filterThickness*1e+2);
 			profile[i].sensitivity = sensitivity(energy,theta);
-			profile[i].fading = fading(info.fadingTime);
 
 			profile[i].length = energy;
 			profile[i].net = profile[i].net_psl*coef;
@@ -296,7 +293,7 @@ public class Data {
 		//System.out.printf("end\n");
 	}
 	
-	private double transmittance(double energy,double theta,double althickness){
+	static double transmittance(double energy,double theta,double althickness){
 		/*ここはcgs単位系*/
 		double range,taurange,AlA,AlZ,AlRho,ta,tb,tc,td,te;
 		
@@ -315,7 +312,7 @@ public class Data {
 		return (1+Math.exp(-td*te))/(1+Math.exp(td*(taurange-te)));
 	}
 	
-	private double sensitivity(double energy, double theta){
+	static double sensitivity(double energy, double theta){
 		double sa,sb,sc,sd,s;
 		if(energy<0.05){
 			sa=-1.37;

@@ -54,7 +54,7 @@ public class SlopeTempTabController implements Initializable{
 				if(slope!=null) {
 					collection.removeSeries(slope);
 				}
-				slope = new XYSeries(name);
+				slope = new XYSeries(String.format("%.2g MeV", temp));
 				for(int i=0;i<data.profile.length;i++) {
 					if(i%10==0) {
 						slope.add(data.profile[i].length,Math.exp(-(b.elem[0][1]+data.profile[i].length*b.elem[1][1])));
