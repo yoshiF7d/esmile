@@ -1,4 +1,6 @@
 package application;
+/*GMII6=850 GMII8(withoutfrange)=850 GXII6=862 GXII8(withoutfrange)=857*/
+/*You have to consider thickness of conversion frange : 8-6変換フランジ(ILE)の厚さ　2cm*/
 public class ESM {
 	int number;
 	double length; /*length between ip edge and magnet edge (not used now)*/
@@ -69,5 +71,4 @@ public class ESM {
 		String.format("# BG Band Half Width : %-29s #\n",String.format("%s mm", bgBandHalfWidth*1e+3)) +
 		"#----------------------------------------------------#\n\n";
 	}
-
 }

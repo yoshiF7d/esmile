@@ -95,7 +95,7 @@ public class AppendableTabPane extends TabPane{
 								String.format("# Range Min          : %-29s #\n",
 										String.format("%g MeV",controller.min)
 									)
-							+   String.format("# Range Min          : %-29s #\n",
+							+   String.format("# Range Max          : %-29s #\n",
 										String.format("%g MeV",controller.max)
 									) 
 							+

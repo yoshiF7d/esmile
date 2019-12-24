@@ -57,12 +57,8 @@ public class Data {
 			pslmin = pslmax = psldata[0][0];
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
-					if (pslmin > psldata[i][j]) {
-						pslmin = psldata[i][j];
-					}
-					if (pslmax < psldata[i][j]) {
-						pslmax = psldata[i][j];
-					}
+					if (pslmin > psldata[i][j]) {pslmin = psldata[i][j];}
+					if (pslmax < psldata[i][j]) {pslmax = psldata[i][j];}
 				}
 			}
 			image = SwingFXUtils.toFXImage(bimg, null);
@@ -259,7 +255,7 @@ public class Data {
 			//System.out.printf("%f\n",(count_background/(2*signal_half_width)));
 			/*calculate energy spectrum*/
 			//profile[i].length -= esm.length;
-			profile[i].net_psl-= profile[i].background_psl;
+			profile[i].net_psl -= profile[i].background_psl;
 			H = esm.height;
 			L = profile[i].length;
 			R = (L*L + H*H)/(2*H);
@@ -274,7 +270,7 @@ public class Data {
 			/*E = mc2**(sqrt(1+(R*K)^2)-1)*/
 			/*dE/dL = mc2*(K^2)*R*(L/H)/sqrt(1+(K*R)^2) */
 			/*signa/(dE*SolidAngle) = (signal/(res*SolidAngle)) * sqrt(1+(K*R)^2) * (H/L) / (mc2*K*K*R)*/
-			coef = Math.sqrt(1+1/K*K*R*R)*(H/L)/((mc2*K)*(info.resolution*esm.solidAngle));
+			coef = Math.sqrt(1.0+1.0/(K*K*R*R))*(H/L)/((mc2*K)*(info.resolution*esm.solidAngle));
 			coef /= transmittance(energy,theta,esm.filterThickness*1e+2);
 			coef /= sensitivity(energy,theta);
 			coef /= fading(info.fadingTime);
@@ -419,8 +415,9 @@ public class Data {
 			for(int i=0;i<profile.length;i++) {
 				if(profile[i].invalid) {bw.write("#");}
 				bw.write(
-					String.format("%g\t%g\t%g\t#\t%g\t%g\n",
+					String.format("%g\t%g\t%g\t%g\t#\t%g\t%g\n",
 						profile[i].length,
+						profile[i].net,
 						profile[i].signal,
 						profile[i].background,
 						profile[i].net_psl,
